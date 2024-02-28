@@ -13,7 +13,6 @@ public class GameEventPublisher {
     public void publishMoveMadeEvent(Game game, Integer move) {
         eventPublisher.publishEvent(new MoveMadeEvent(this,game, move));
     }
-
     public void publishGameUpdateEvent(Game game) {
         eventPublisher.publishEvent(new GameUpdateEvent(this,game));
     }

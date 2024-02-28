@@ -25,6 +25,7 @@ public class GameActions {
     private Integer mod;
 
     public Game createGameForTwoPlayers(List<Player> players) {
+        log.info("Creating game for two players");
         var player1 = players.getFirst();
         var player2 = players.getLast();
 
@@ -38,6 +39,7 @@ public class GameActions {
     }
 
     public Game createGameWaitingForAnotherPlayer(List<Player> players) {
+        log.info("Creating game waiting for another player");
         var player1 = players.getFirst();
 
         return Game.builder()
@@ -49,6 +51,7 @@ public class GameActions {
     }
 
     public boolean isMovePossible(Game game) {
+        log.debug("Checking if move is possible for game with ID: {}", game.getId());
         return game.getGameState() != GameState.WAITING_FOR_ANOTHER_PLAYER
                 && game.getCurrentPlayer().getType() == PlayerType.AUTOMATIC;
     }
@@ -58,7 +61,7 @@ public class GameActions {
             var currentNumber = game.getCurrentNumber() != null ? game.getCurrentNumber() : game.getStartingNumber();
             if (isDividedByValue(move, currentNumber, mod)) {
                 var newNumber = (currentNumber + move) / mod;
-                log.info("{} made a move: added {} in current {} resulting number: {}", player.getName(), move, currentNumber, newNumber);
+                log.info("Player {} made a move: added {} in current {} resulting number: {}", player.getName(), move, currentNumber, newNumber);
                 game.setCurrentNumber(newNumber);
                 game.setCurrentPlayer(getOpponent(game, player.getId()));
             }
@@ -67,18 +70,23 @@ public class GameActions {
     }
 
     public boolean isDividedByValue(int move, int current) {
+        log.debug("Checking if move {} is divisible by current {}", move, current);
         return isDividedByValue(move, current, mod);
     }
 
     private boolean isDividedByValue(int move, int current, int mod) {
-        return (move + current) % mod == 0;
+        boolean isDivisible = (move + current) % mod == 0;
+        log.debug("Checking if move {} + current {} is divisible by mod {}: {}", move, current, mod, isDivisible);
+        return isDivisible;
     }
 
     public Integer generateNextMove(Player player, Integer move) {
+        log.debug("Generating next move for player {} with current move: {}", player.getName(), move);
         return moveStrategyFactory.getStrategy(player.getType()).generateMove(move);
     }
 
     public boolean isValidMove(Integer move) {
+        log.debug("Checking if move {} is valid", move);
         return move != null && (move.equals(-1) || move.equals(0) || move.equals(1));
     }
 
@@ -86,9 +94,12 @@ public class GameActions {
         return game.getPlayer1().getId().equals(playerId) ? game.getPlayer2() : game.getPlayer1();
     }
     public boolean isGameCompleted(Game game) {
-        return game.getCurrentNumber() != null && game.getCurrentNumber().compareTo(1) == 0 || game.getCurrentPlayer().equals(game.getPlayer1());
+        boolean isCompleted = game.getCurrentNumber() != null && game.getCurrentNumber().compareTo(1) == 0 || game.getCurrentPlayer().equals(game.getPlayer1());
+        log.debug("Checking if game with ID {} is completed: {}", game.getId(), isCompleted);
+        return isCompleted;
     }
     public Game endGame(Game game) {
+        log.info("Ending game with ID: {}", game.getId());
         game.setGameState(GameState.FINISHED);
         game.setWinner(getOpponent(game, game.getCurrentPlayer().getId()));
         return game;

@@ -7,12 +7,14 @@ import com.exercise.got.repository.PlayerRepository;
 import com.exercise.got.service.PlayerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
 
@@ -23,6 +25,7 @@ public class PlayerServiceImpl implements PlayerService {
             builder.type(request.type());
         }
         Player player = builder.name(request.name()).build();
+        log.debug("Player name {} is created", player.getName());
         return playerRepository.save(player);
     }
 
@@ -41,18 +44,25 @@ public class PlayerServiceImpl implements PlayerService {
     public Player updatePlayer(Long id, PlayerType type) {
         Player player = getPlayerById(id);
         player.setType(type);
+        log.debug("Player id {} : type is changed to {}", player.getId(), type);
         return playerRepository.save(player);
     }
 
     @Override
     public void acquirePlayer(List<Player> players) {
-        players.forEach(p-> p.setAvailable(false));
+        players.forEach(p -> {
+            log.debug("Acquire player id {}", p.getId());
+            p.setAvailable(false);
+        });
         playerRepository.saveAll(players);
     }
 
     @Override
     public void releasePlayer(List<Player> players) {
-        players.forEach(p-> p.setAvailable(true));
+        players.forEach(p -> {
+            log.debug("Release player id {}", p.getId());
+            p.setAvailable(true);
+        });
         playerRepository.saveAll(players);
     }
 }

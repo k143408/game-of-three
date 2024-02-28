@@ -11,6 +11,7 @@ import com.exercise.got.service.GameService;
 import com.exercise.got.service.PlayerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static com.exercise.got.enums.PlayerType.MANUAL;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GameServiceImpl implements GameService {
     private final PlayerService playerService;
     private final GameRepository gameRepository;
@@ -51,6 +53,7 @@ public class GameServiceImpl implements GameService {
             game.setPlayer2(player2);
             game.setGameState(CREATED);
             gameEventPublisher.publishGameUpdateEvent(game);
+            log.info("Player {} joined game {}", player2.getName(), gameId);
         }
     }
 
