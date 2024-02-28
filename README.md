@@ -4,7 +4,6 @@
 
 - JDK 21
 - Spring Boot 3.2.3
-- Docker (for test environment)
 - H2 database (Already exists)
 
 ## Getting Started
@@ -149,3 +148,7 @@ integration testing with external dependencies, ensuring a more robust and relia
 7. **Integration with External APIs:**
    Explore opportunities to integrate the game with external APIs or services for additional functionalities, such as
    fetching real-time weather data to influence the game.
+
+8. **Usage of Testcontainers in test environment:**
+   Testcontainers revolutionizes the test environment by providing a dynamic and lightweight solution for containerized 
+   integration testing, ensuring seamless, reproducible, and scalable testing environments for future software development
