@@ -8,11 +8,9 @@ import com.exercise.got.controller.response.PlayerResponse;
 import com.exercise.got.enums.PlayerType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.containers.GenericContainer;
@@ -28,18 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
 @Testcontainers
-
 public class GameFlowIntegrationTest {
-    Logger logger = Logger.getLogger(this.getClass().getName());
     @Container
     private static final GenericContainer<?> postgresContainer = new GenericContainer<>("postgres:13")
             .withExposedPorts(5432)
             .withEnv("POSTGRES_DB", "testdb")
             .withEnv("POSTGRES_USER", "testuser")
             .withEnv("POSTGRES_PASSWORD", "testpassword");
-
+    Logger logger = Logger.getLogger(this.getClass().getName());
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -64,7 +59,7 @@ public class GameFlowIntegrationTest {
 
         PlayerResponse winner = objectMapper.readValue(getGameResult.andReturn().getResponse().getContentAsString(), CurrentGameStateResponse.class).currentPlayer();
 
-        logger.info(()-> "Winner "+ winner.name());
+        logger.info(() -> "Winner " + winner.name());
     }
 
     private ResultActions createPlayer(String playerName) throws Exception {
