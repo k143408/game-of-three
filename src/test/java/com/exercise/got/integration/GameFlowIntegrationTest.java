@@ -26,14 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
 public class GameFlowIntegrationTest {
-    @Container
-    private static final GenericContainer<?> postgresContainer = new GenericContainer<>("postgres:13")
-            .withExposedPorts(5432)
-            .withEnv("POSTGRES_DB", "testdb")
-            .withEnv("POSTGRES_USER", "testuser")
-            .withEnv("POSTGRES_PASSWORD", "testpassword");
     Logger logger = Logger.getLogger(this.getClass().getName());
     @Autowired
     private MockMvc mockMvc;
